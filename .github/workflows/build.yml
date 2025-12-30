@@ -9,26 +9,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # Added this to prevent early failure
+    timeout-minutes: 60  # Increased timeout to 60 minutes
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Build with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1.5.2  # Updated to latest version
+      uses: ArtemSBulgakov/buildozer-action@v1
       id: buildozer
       env:
         USER: root
         INPUT_CHANGE_OWNER: 'false'
+        BUILDOZER_LOG_LEVEL: 2   # 0=quiet, 1=normal, 2=verbose
       with:
-        command: buildozer android debug
+        command: buildozer -v android debug  # -v for verbose output
         buildozer_version: master
         repository_root: .
         workdir: .
 
     - name: Upload APK
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: anime-downloader-debug
         path: bin/*.apk
