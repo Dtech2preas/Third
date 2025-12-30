@@ -20,7 +20,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,requests,urllib3,idna,chardet,certifi,openssl
+requirements = python3,kivy,requests,urllib3,idna,chardet,certifi,openssl,charset-normalizer
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -101,10 +101,13 @@ android.wakelock = True
 #android.copy_libs = 1
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
-android.archs = arm64-v8a
+android.archs = arm64-v8a, armeabi-v7a
 
 # (bool) enables Android auto backup feature (Android API >= 23)
 android.allow_backup = True
+
+# (bool) Accept SDK license
+android.accept_sdk_license = True
 
 # (str) XML file for manifest extras
 #android.manifest_launch_mode = standard
@@ -157,7 +160,7 @@ android.allow_backup = True
 log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
-warn_on_root = 1
+warn_on_root = 0
 
 # (str) Path to build artifact storage, absolute or relative to spec file
 # build_dir = ./.buildozer
