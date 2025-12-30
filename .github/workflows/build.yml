@@ -9,24 +9,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60  # Increased timeout to 60 minutes
+    timeout-minutes: 60  # Increased timeout
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Build with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
-      id: buildozer
-      env:
-        USER: root
-        INPUT_CHANGE_OWNER: 'false'
-        BUILDOZER_LOG_LEVEL: 2   # 0=quiet, 1=normal, 2=verbose
-      with:
-        command: buildozer -v android debug  # -v for verbose output
-        buildozer_version: master
-        repository_root: .
-        workdir: .
+    - name: Build APK with Docker
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}:/app \
+          -w /app \
+          kivy/buildozer:latest \
+          buildozer -v android debug
+      shell: bash
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
