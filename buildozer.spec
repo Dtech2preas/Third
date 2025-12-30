@@ -106,6 +106,9 @@ android.archs = arm64-v8a
 # (bool) enables Android auto backup feature (Android API >= 23)
 android.allow_backup = True
 
+# (bool) Accept SDK license
+android.accept_sdk_license = True
+
 # (str) XML file for manifest extras
 #android.manifest_launch_mode = standard
 
@@ -157,7 +160,7 @@ android.allow_backup = True
 log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
-warn_on_root = 1
+warn_on_root = 0
 
 # (str) Path to build artifact storage, absolute or relative to spec file
 # build_dir = ./.buildozer
