@@ -1,0 +1,72 @@
+<SearchScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+        
+        Label:
+            text: "Anime Downloader"
+            font_size: '24sp'
+            size_hint_y: None
+            height: 50
+            
+        BoxLayout:
+            size_hint_y: None
+            height: 40
+            spacing: 10
+            TextInput:
+                id: search_input
+                multiline: False
+                hint_text: "Search Anime (e.g. W'z)"
+            Button:
+                text: "Search"
+                size_hint_x: None
+                width: 100
+                on_release: root.search_anime()
+                
+        RecycleView:
+            id: results_list
+            viewclass: 'ResultButton'
+            RecycleBoxLayout:
+                default_size: None, dp(56)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+<ResultButton@Button>:
+    text: ''
+    anime_data: {}
+    on_release: app.root.get_screen('search').on_result_selected(self.anime_data)
+
+<EpisodeScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            Button:
+                text: "< Back"
+                size_hint_x: None
+                width: 80
+                on_release: root.go_back()
+            Label:
+                text: root.anime_title
+                font_size: '20sp'
+                
+        RecycleView:
+            id: episode_list
+            viewclass: 'EpisodeButton'
+            RecycleBoxLayout:
+                default_size: None, dp(48)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+<EpisodeButton@Button>:
+    text: ''
+    ep_data: {}
+    on_release: app.root.get_screen('episodes').on_episode_selected(self.ep_data)
