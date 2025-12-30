@@ -185,8 +185,7 @@ class AnimeApp(App):
             from android.permissions import request_permissions, Permission
             request_permissions([
                 Permission.READ_EXTERNAL_STORAGE, 
-                Permission.WRITE_EXTERNAL_STORAGE,
-                Permission.INTERNET
+                Permission.WRITE_EXTERNAL_STORAGE
             ])
 
 if __name__ == '__main__':
