@@ -11,17 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Build with Buildozer
       uses: ArtemSBulgakov/buildozer-action@v1
       id: buildozer
+      env:
+        USER: root
+        INPUT_CHANGE_OWNER: 'false'
       with:
         command: buildozer android debug
         buildozer_version: master
+        repository_root: .
+        workdir: .
 
     - name: Upload APK
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: anime-downloader-debug
         path: bin/*.apk
