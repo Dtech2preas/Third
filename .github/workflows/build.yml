@@ -9,80 +9,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # Added timeout to prevent premature failure
-    
+    timeout-minutes: 30  # Added this to prevent early failure
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Fetch all history for better versioning
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9'  # Python 3.9 is recommended for Buildozer compatibility
-        cache: 'pip'
-
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          git \
-          python3-dev \
-          python3-pip \
-          python3-setuptools \
-          libffi-dev \
-          libssl-dev \
-          libjpeg-dev \
-          zlib1g-dev
-        sudo apt-get clean
-
-    - name: Install Buildozer and dependencies
-      run: |
-        pip3 install --upgrade pip setuptools wheel
-        pip3 install buildozer cython==0.29.33
 
     - name: Build with Buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1.5.2  # Updated to latest version
       id: buildozer
-      run: |
-        # Set up virtual environment (optional but recommended)
-        python3 -m venv venv
-        source venv/bin/activate
-        
-        # Run buildozer with debug output
-        buildozer android debug 2>&1 | tee build.log
-        
-        # Check if build was successful
-        if ls bin/*.apk 1> /dev/null 2>&1; then
-          echo "APK_BUILT=true" >> $GITHUB_OUTPUT
-          echo "APK_PATH=$(ls bin/*.apk | head -1)" >> $GITHUB_OUTPUT
-        else
-          echo "Build failed. Check build.log for details."
-          echo "build_log<<EOF" >> $GITHUB_STEP_SUMMARY
-          tail -100 build.log >> $GITHUB_STEP_SUMMARY
-          echo "EOF" >> $GITHUB_STEP_SUMMARY
-          exit 1
-        fi
       env:
         USER: root
-        PACKAGES_PATH: $HOME/.buildozer_global_packages
-        ANDROID_SDK_HOME: $HOME/.android
+        INPUT_CHANGE_OWNER: 'false'
+      with:
+        command: buildozer android debug
+        buildozer_version: master
+        repository_root: .
+        workdir: .
 
-    - name: Upload APK artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
-      if: steps.buildozer.outputs.APK_BUILT == 'true'
       with:
         name: anime-downloader-debug
-        path: ${{ steps.buildozer.outputs.APK_PATH }}
-        retention-days: 7
-
-    - name: Upload build log
-      if: always()  # Always upload logs, even on failure
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-logs
-        path: |
-          build.log
-          .buildozer/**/*.log
-        retention-days: 7
+        path: bin/*.apk
