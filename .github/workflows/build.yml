@@ -21,7 +21,7 @@ jobs:
           -v ${{ github.workspace }}:/app \
           -w /app \
           kivy/buildozer:latest \
-          buildozer -v android debug
+          -v android debug
       shell: bash
 
     - name: Upload APK
